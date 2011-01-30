@@ -1,0 +1,8 @@
+#!/bin/sh
+
+JAVA="${JAVA_HOME}/bin/java"
+INSTALL_DIR=.
+JAR="${INSTALL_DIR}/openrock.jar"
+JAVA_OPTS=""
+
+${JAVA} ${JAVA_OPTS} -jar ${JAR} 

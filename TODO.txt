@@ -1,0 +1,26 @@
+
+Next release maybe
+* Add a concede button
+* Stop watch
+* Stone path preview
+* Keyboard shortcuts
+* Better curling physics
+* Sweeping other stones than the current
+* Decouple ticks from frames (enables changing fps, slow motion, etc)
+* Replays
+* Add settings dialog. E.g anti-aliasing, colors, fps...
+* Save and load games
+* Fix threading of Swing GUI: Post events to main thread
+
+Future
+* Dynamic ice conditions
+* AI player
+* Other game types. E.g. mixed double, figure, draw-to-tee
+* Tournaments
+* Better graphics
+* Sound
+* Convert SwingGui to widgets
+* Text chat
+
+Probably never
+* 3D-graphics
