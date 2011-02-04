@@ -22,7 +22,7 @@ package net.sf.openrock.model;
 
 public class Stone implements Cloneable {
 
-	private final int team;
+	private int team;
 	private Vect2d position;
 	private Vect2d velocity;
 	private double a;
@@ -98,6 +98,10 @@ public class Stone implements Cloneable {
 	
 	public int getTeam() {
 		return team;
+	}
+
+	public void setTeam(int newteam) {
+		team = newteam;
 	}
 	
 	/**

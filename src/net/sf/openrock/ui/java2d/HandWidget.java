@@ -24,9 +24,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
 import net.sf.openrock.game.Game;
+import net.sf.openrock.game.MatchController;
 import net.sf.openrock.model.Stone;
 import net.sf.openrock.model.Vect2d;
 
+/* ADSG: change colour of stone depending on which team's turn it is */
 
 class HandWidget extends Widget {
 
@@ -89,6 +91,10 @@ class HandWidget extends Widget {
 
 	@Override
 	public void render(Graphics2D g2d) {
+		MatchController match = game.getMatchCtrl();
+
+		stone.setTeam(match.getCurrentTeam()); 
+
 		if (enabled) {
 			g2d.setColor(new Color(255, 255, 255, 192));
 		} else {

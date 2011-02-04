@@ -46,7 +46,7 @@ public class MatchController {
 		game.startTurn();
 	}
 
-	int getCurrentTeam() {
+	public int getCurrentTeam() {
 		return match.getTurn();
 	}
 
