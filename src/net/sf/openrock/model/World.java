@@ -31,10 +31,14 @@ public class World {
 	private double broomX;
 	private double broomY;
 	private volatile boolean clear;
+
+	//private ScoreIF score = ScoreFactory.CreateNormalScore(stones);
+	private ScoreIF score = ScoreFactory.CreateSkinsScore(stones);
 	
 	public World() {
 	}
 	
+
 	public boolean step(double dt) {
 		int steps = 10;
 		if (clear) {
@@ -163,7 +167,7 @@ public class World {
 			if (s.getTeam() != team) {
 				mark = false;
 			}
-			double d = s.getPosition().minus(CENTER).length() - s.getRadius();
+			double d = s.getPosition().minus(ScoreFactory.CENTER).length() - s.getRadius();
 			if (d > CurlingConstants.TWELVE_FEET_RADIUS) {
 				mark = false;
 			}
@@ -198,8 +202,6 @@ public class World {
 		return broomY;
 	}
 
-	private static final Vect2d CENTER = new Vect2d(0.0, CurlingConstants.TEE_TO_CENTER);
-
 	public void markFreeGuards(int team) {
 		for (Stone s : stones) {
 			if (s.getTeam() == team) {
@@ -208,7 +210,7 @@ public class World {
 			if (s.getPosition().getY() + s.getRadius() >= CurlingConstants.TEE_TO_CENTER) {
 				continue;
 			}
-			double d = s.getPosition().minus(CENTER).length() - s.getRadius();
+			double d = s.getPosition().minus(ScoreFactory.CENTER).length() - s.getRadius();
 			if (d <= CurlingConstants.TWELVE_FEET_RADIUS) {
 				continue;
 			}
@@ -217,56 +219,11 @@ public class World {
 	}
 
 	public int getBestTeam() {
-		if (stones.isEmpty()) {
-			return -1;
-		}
-		List<Stone> sorted = new ArrayList<Stone>(stones);
-		Collections.sort(sorted, new BestStoneComp());
-		Stone s = sorted.get(0);
-		double d = s.getPosition().minus(CENTER).length() - s.getRadius();
-		if (d > CurlingConstants.TWELVE_FEET_RADIUS) {
-			return -1;
-		} else {
-			return s.getTeam();
-		}
+		return score.getBestTeam();
 	}
 
 	public int getPoints() {
-		if (stones.isEmpty()) {
-			return 0;
-		}
-		List<Stone> sorted = new ArrayList<Stone>(stones);
-		Collections.sort(sorted, new BestStoneComp());
-		int p = 0;
-		int team = sorted.get(0).getTeam();
-		for (Stone s : sorted) {
-			if (s.getTeam() != team) {
-				break;
-			}
-			double d = s.getPosition().minus(CENTER).length() - s.getRadius();
-			if (d > CurlingConstants.TWELVE_FEET_RADIUS) {
-				break;
-			}
-			p++;
-		}
-		return p;
-	}
-	
-	private static class BestStoneComp implements Comparator<Stone> {
-
-		@Override
-		public int compare(Stone o1, Stone o2) {
-			double d1 = o1.getPosition().minus(CENTER).length();
-			double d2 = o2.getPosition().minus(CENTER).length();
-			if (d1 < d2) {
-				return -1;
-			} else if (d1 > d2) {
-				return 1;
-			} else {
-				return 0;
-			}
-		}
-
+		return score.getPoints();
 	}
 
 }
