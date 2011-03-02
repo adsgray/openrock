@@ -62,8 +62,14 @@ class DefaultPhysics implements PhysicsIF
 
 	public double getSpeed(double speed)
 	{
+		speed = Math.pow(speed, 2);
+		double v = (1.0 - speed) * 2.3 + 3.5 * speed;
+
+		/* original: */
+		/*
 		speed = Math.pow(speed, 1.5);
 		double v = (1.0 - speed) * 2.3 + 3.0 * speed;
+		*/
 		return v;
 	}
 
@@ -106,9 +112,28 @@ class PhysicsHelper {
 	   as orig + orig*error
 	   Call as val = introduceError(val, 0.10) for 10% error
 	 */
+	private static final Logger logger = 
+		Logger.getLogger(PhysicsHelper.class.getName());
+
 	static double introduceError(double orig, double error)
 	{
-		return orig;
+		/* a number between 0.0 and error */
+		double errorfactor = Math.random() * error;
+		double coinflip = Math.random();
+
+		// decide on direction of error
+		if (coinflip > 0.5) {
+			errorfactor = -errorfactor;
+		}
+		
+		double ret = orig + orig * errorfactor;
+
+		logger.info("orig [" + orig +
+			"] error [" + errorfactor + 
+			" returning [" +  ret +
+			"]");
+
+		return orig + orig * errorfactor;
 	}
 
 	static Vect2d introduceError(Vect2d orig, double error)
@@ -117,6 +142,13 @@ class PhysicsHelper {
 		double y = introduceError(orig.getY(), error);
 
 		return new Vect2d(x,y);
+	}
+
+	// leave y alone
+	static Vect2d introduceXError(Vect2d orig, double error)
+	{
+		return new Vect2d(introduceError(orig.getX(), error),
+				  orig.getY());
 	}
 }
 
@@ -154,6 +186,6 @@ class PhysicsDirError extends PhysicsDecorator
 	{
 		Vect2d dir = super.getDir();
 		// modify X and Y by plus or minus 0-10%, randomly
-		return PhysicsHelper.introduceError(dir, direrror);
+		return PhysicsHelper.introduceXError(dir, direrror);
 	}
 }

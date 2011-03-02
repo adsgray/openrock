@@ -28,6 +28,7 @@ import net.sf.openrock.model.Vect2d;
 import net.sf.openrock.model.World;
 import net.sf.openrock.ui.UIProvider;
 import net.sf.openrock.game.Physics;
+import net.sf.openrock.game.PlayersFactory;
 
 
 public class WorldController {
@@ -37,7 +38,7 @@ public class WorldController {
 	private final Game game;
 	private final UIProvider ui;
 	private final World world;
-	private final PhysicsIF physics;
+	private final PlayersIF players;
 	
 	private Stone currentStone;
 	private boolean live = false;
@@ -51,7 +52,10 @@ public class WorldController {
 		world.setBroomLocation(0, CurlingConstants.TEE_TO_CENTER);
 		ui.setWorld(world);
 
-		physics = Physics.CreateDefaultPhysics(world);
+		//physics = Physics.CreateDefaultPhysics(world);
+		//physics = Physics.CreateErrorPhysics(world, 0.015, 0.45);
+		//players = PlayersFactory.CreatePerfectPlayers(world);
+		players = PlayersFactory.CreateImperfectPlayers(world, 0.025, 0.45);
 	}
 	
 	void prepareForNewEnd() {
@@ -102,6 +106,7 @@ public class WorldController {
 
 	public void throwStone() {
 		// do speed and dir calculations externally
+		PhysicsIF physics = players.getPhysics(game.getMatchCtrl().getStones());
 		double v = physics.getSpeed(ui.getSpeed());
 		Vect2d dir = physics.getDir();
 

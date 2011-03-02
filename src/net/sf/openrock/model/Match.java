@@ -53,6 +53,11 @@ public class Match {
 	public int getStones(int i) {
 		return stones[i];
 	}
+
+	public int getStones()
+	{
+		return stones[turn];
+	}
 	
 	public void nextTurn() {
 		stones[turn]--;

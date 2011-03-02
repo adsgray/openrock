@@ -50,6 +50,10 @@ public class MatchController {
 		return match.getTurn();
 	}
 
+	public int getStones() {
+		return match.getStones();
+	}
+
 	void nextTurn() {
 		logger.info("Next turn");
 		match.nextTurn();
