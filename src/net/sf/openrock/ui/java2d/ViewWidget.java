@@ -205,7 +205,11 @@ class ViewWidget extends Widget {
 		g2d.setColor(Color.GRAY);
 		g2d.fill(new Ellipse2D.Double(-r, -r, r*2, r*2));
 		r = r -0.03;
-		g2d.setColor(CurlingConstants.TEAM_COLORS[stone.getTeam()]);
+		if (stone.getShot()) {
+			g2d.setColor(CurlingConstants.SHOTSTONE_COLORS[stone.getTeam()]);
+		} else {
+			g2d.setColor(CurlingConstants.TEAM_COLORS[stone.getTeam()]);
+		}
 		g2d.fill(new Ellipse2D.Double(-r, -r, r*2, r*2));
 		g2d.setColor(stone.isFreeGuard() ? Color.BLUE : Color.BLACK);
 		g2d.fill(new Rectangle2D.Double(-0.01, -0.04, 0.02, r));

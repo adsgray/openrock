@@ -40,6 +40,11 @@ public class CurlingConstants {
 	public static final Vect2d STONE_START = new Vect2d(0.0, -CurlingConstants.TEE_TO_CENTER - CurlingConstants.TEE_TO_HOG + 0.5);
 
 	public static final Color[] TEAM_COLORS = new Color[] { Color.YELLOW, Color.RED };
+
+	public static final Color[] SHOTSTONE_COLORS = new Color [] {
+		new Color (238, 221, 130, 255), // light goldenrod
+		new Color (255, 99,   71, 255)  // tomato
+	};
 	
 	private static double footToMeter(double f) {
 		return f * 0.3048;

@@ -143,6 +143,33 @@ public class World {
 			added.add(s);
 		}
 	}
+
+	// ADSG: make optional
+	public void markShotStones() {
+		if (stones.isEmpty()) {
+			return;
+		}
+
+		List<Stone> sorted = new ArrayList<Stone>(stones);
+		Collections.sort(sorted, new ScoreFactory.BestStoneComp());
+
+		boolean mark = true;
+		int team = sorted.get(0).getTeam();
+
+		/* Go through entire list of stones.
+		Mark those which would count at conclusion of end.
+		 */
+		for (Stone s : sorted) {
+			if (s.getTeam() != team) {
+				mark = false;
+			}
+			double d = s.getPosition().minus(CENTER).length() - s.getRadius();
+			if (d > CurlingConstants.TWELVE_FEET_RADIUS) {
+				mark = false;
+			}
+			s.setShot(mark);
+		}
+	}
 	
 	public void clearStones() {
 		clear = true;

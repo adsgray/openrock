@@ -168,6 +168,7 @@ public class WorldController {
 		for (Stone s : world.getStones()) {
 			s.setFreeGuard(false);
 		}
+		world.markShotStones();
 		game.getMatchCtrl().nextTurn();
 	}
 

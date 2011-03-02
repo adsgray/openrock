@@ -19,7 +19,6 @@
 package net.sf.openrock.model;
 
 
-
 public class Stone implements Cloneable {
 
 	private int team;
@@ -30,7 +29,8 @@ public class Stone implements Cloneable {
 	private double sweep;
 	private boolean hit;
 	private boolean freeGuard;
-	
+	private boolean shotstone = false;
+
 	public Stone(Vect2d pos, Vect2d vel, double a, double da, int team) {
 		position = pos;
 		velocity = vel;
@@ -164,6 +164,16 @@ public class Stone implements Cloneable {
 	
 	public boolean isFreeGuard() {
 		return freeGuard;
+	}
+
+	public void setShot(boolean shotstone)
+	{
+		this.shotstone = shotstone;
+	}
+
+	public boolean getShot()
+	{
+		return shotstone;
 	}
 	
 	@Override
