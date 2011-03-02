@@ -39,17 +39,36 @@ public class Stone implements Cloneable {
 		this.team = team;
 	}
 
+	private double getCurl(double s)
+	{
+		double curl = 0;
+
+		// no curl until release point
+		if (position.getY() > CurlingConstants.RELEASE_POINT)
+		{
+			double curlFriction = (1.0 - sweep) * 0.02 + 
+				sweep * 0.01;
+			curl = -curlFriction * 
+				Math.max(-1.0, Math.min(0.7*da/(s*s), 1.0));
+		}
+
+		return curl;
+	}
+
 	public void step(double dt) {
 		double s = velocity.length();
 		Vect2d acc = Vect2d.ZERO;
 		double dda = 0;
 		if (s > 0.01) {
+			/* ADSG: how to put this into PhysicsIF */
 			Vect2d dir = velocity.normalized();
-			double curlFriction = (1.0 - sweep) * 0.02 + sweep * 0.01;
-			double curl = -curlFriction * Math.max(-1.0, Math.min(0.7*da/(s*s), 1.0));
+
+			double curl = getCurl(s);
 			double friction = getFriction(sweep);
 			acc = dir.times(-friction).plus(dir.cross(curl));
-			dda = -Math.max(0.02, Math.min(0.02 / s, 0.3)) * Math.signum(da);
+			dda = -Math.max(0.02, Math.min(0.02 / s, 0.3)) * 
+				Math.signum(da);
+
 		} else {
 			velocity = Vect2d.ZERO;
 			dda = -0.3 * Math.signum(da);

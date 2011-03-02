@@ -34,6 +34,8 @@ public class CurlingConstants {
 	public static final double ONE_FEET_RADIUS = footToMeter(0.5);
 	public static final double THIN_LINE = footToMeter(0.5 / 12);
 	public static final double THICK_LINE = footToMeter(4.0 / 12);
+	// have the rock run straight until 1/4 down the sheet
+	public static final double RELEASE_POINT = -TEE_TO_HOG - TEE_TO_HACK; 
 	
 	public static final Vect2d STONE_START = new Vect2d(0.0, -CurlingConstants.TEE_TO_CENTER - CurlingConstants.TEE_TO_HOG + 0.5);
 
