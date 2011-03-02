@@ -37,15 +37,19 @@ import net.sf.openrock.model.Vect2d;
 import net.sf.openrock.model.World;
 
 
+
 class ViewWidget extends Widget {
 
 	private World world;
 	private List<PointerListener> listeners = new CopyOnWriteArrayList<PointerListener>();
 	private volatile double range = 10;
-	private double scrollX;
-	private double scrollY;
+	protected double scrollX;
+	protected double scrollY;
 	private int lastX;
 	private int lastY;
+
+	// change to -1 to reverse direction
+	protected int orientation = 1;
 
 	public ViewWidget() {
 	}
@@ -94,7 +98,7 @@ class ViewWidget extends Widget {
 		if ((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0) {
 			double s = getHeight() / range;
 			double x = (e.getX() - getWidth()/2) / s + scrollX;
-			double y = (e.getY() - getHeight()/2) / -s + scrollY;
+			double y = (e.getY() - getHeight()/2) / (s * orientation) + scrollY;
 			firePointerMoved(x, y);
 		}
 	}
@@ -107,7 +111,7 @@ class ViewWidget extends Widget {
 		} else if (e.getButton() == MouseEvent.BUTTON1) {
 			double s = getHeight() / range;
 			double x = (e.getX() - getWidth()/2) / s + scrollX;
-			double y = (e.getY() - getHeight()/2) / -s + scrollY;
+			double y = (e.getY() - getHeight()/2) / (s * orientation) + scrollY;
 			firePointerPlaced(x, y);
 		}
 	}
@@ -126,12 +130,18 @@ class ViewWidget extends Widget {
 		setBounds(0, 0, renderWidth, renderHeight);
 	}
 
-	@Override
-	public void render(Graphics2D g2d) {
+	protected void renderTranslate(Graphics2D g2d)
+	{
 		g2d.translate(getWidth()/2, getHeight()/2);
 		double s = getHeight() / range;
-		g2d.scale(s, -s);
+		g2d.scale(s, s * orientation);
 		g2d.translate(-scrollX, -scrollY);
+	}
+
+	@Override
+	public void render(Graphics2D g2d) {
+
+		renderTranslate(g2d);
 		drawIce(g2d);
 		
 		for (Stone stone : world.getStones()) {

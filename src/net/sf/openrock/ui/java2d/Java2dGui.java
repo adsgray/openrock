@@ -44,6 +44,8 @@ public class Java2dGui implements PointerListener, UIProvider {
 	private final HandWidget hand;
 	private final GoWidget go;
 	private final SwingGui swingGui;
+
+	private final SmallViewWidget smallview;
 	
 	private Game game;
 	private boolean broomMovable;
@@ -67,6 +69,8 @@ public class Java2dGui implements PointerListener, UIProvider {
 		view.addPointerListener(this);
 		view.setScrollX(0.0);
 		view.setScrollY(CurlingConstants.TEE_TO_CENTER - CurlingConstants.TEE_TO_HOG/2 + CurlingConstants.TWELVE_FEET_RADIUS/2);
+
+
 		hud = new HudWidget();
 		speed = new SpeedWidget();
 		hand = new HandWidget();
@@ -79,6 +83,10 @@ public class Java2dGui implements PointerListener, UIProvider {
 		renderer.addWidget(hand);
 		renderer.addWidget(go);
 		renderer.addWidget(sweep);
+
+		smallview = new SmallViewWidget();
+		renderer.addWidget(smallview);
+
         frame.add(renderer.getCanvas());
         frame.pack();
         frame.setLocationByPlatform(true);
@@ -189,6 +197,7 @@ public class Java2dGui implements PointerListener, UIProvider {
 	@Override
 	public void setWorld(World world) {
 		view.setWorld(world);
+		smallview.setWorld(world);
 	}
 
 	@Override

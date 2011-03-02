@@ -100,7 +100,6 @@ public class WorldController {
 		world.replaceStones(stones);
 	}
 
-	/* ADSG */
 	public void throwStone() {
 		// do speed and dir calculations externally
 		double v = physics.getSpeed(ui.getSpeed());
@@ -108,7 +107,8 @@ public class WorldController {
 
 		Vect2d vel = dir.times(v);
 		double da = 1.0;
-		if (!ui.isHandRight()) {
+		// should make this dependent on orientation
+		if (ui.isHandRight()) {
 			da = -da;
 		}
 		currentStone = new Stone(CurlingConstants.STONE_START, vel, 0, da, game.getMatchCtrl().getCurrentTeam());
