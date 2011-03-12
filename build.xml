@@ -21,7 +21,9 @@
         description="compile the source " >
     <!-- Compile the java code from ${src} into ${build} -->
     <javac srcdir="${src}" debug="${debug}" destdir="${build}" includeantruntime="false"
-    	includes="**/*.java" />
+    	includes="**/*.java">
+		<compilerarg value="-Xlint:unchecked"/>
+	</javac>
 
 	<!-- copy graphic to build dir -->
 	<copy todir="${build}" file="${basedir}/gfx/openrock.png"/>
