@@ -31,6 +31,7 @@ import net.sf.openrock.game.Game;
 import net.sf.openrock.model.CurlingConstants;
 import net.sf.openrock.model.Match;
 import net.sf.openrock.model.World;
+import net.sf.openrock.model.StateControllerIF;
 import net.sf.openrock.ui.UIProvider;
 
 
@@ -45,9 +46,13 @@ public class Java2dGui implements PointerListener, UIProvider {
 	private final GoWidget go;
 	private final SwingGui swingGui;
 
+	private final UndoWidget undo;
+	private final RedoWidget redo;
+
 	private final SmallViewWidget smallview;
 	
 	private Game game;
+	private StateControllerIF state;
 	private boolean broomMovable;
 	private NextWidget next;
 	private SweepWidget sweep;
@@ -77,12 +82,16 @@ public class Java2dGui implements PointerListener, UIProvider {
 		go = new GoWidget();
 		sweep = new SweepWidget();
 		next = new NextWidget();
+		undo = new UndoWidget();
+		redo = new RedoWidget();
 		renderer.addWidget(view);
 		renderer.addWidget(hud);
 		renderer.addWidget(speed);
 		renderer.addWidget(hand);
 		renderer.addWidget(go);
 		renderer.addWidget(sweep);
+		renderer.addWidget(undo);
+		renderer.addWidget(redo);
 
 		smallview = new SmallViewWidget();
 		renderer.addWidget(smallview);
@@ -103,6 +112,14 @@ public class Java2dGui implements PointerListener, UIProvider {
 		hand.setGame(game);
 		go.setGame(game);
 		next.setGame(game);
+	}
+
+	@Override
+	public void setStateController(StateControllerIF state)
+	{
+		this.state = state;
+		undo.setStateController(state);
+		redo.setStateController(state);
 	}
 	
 	@Override
@@ -137,6 +154,12 @@ public class Java2dGui implements PointerListener, UIProvider {
 		}
 	}
 
+	public void enableStateButtons()
+	{
+		undo.setEnabled(state.isUndoPossible());
+		redo.setEnabled(state.isRedoPossible());
+	}
+
 	@Override
 	public void startTurn() {
 		sweep.startTurn();
@@ -144,6 +167,8 @@ public class Java2dGui implements PointerListener, UIProvider {
 		hand.setEnabled(true);
 		go.setEnabled(true);
 		broomMovable = true;
+
+		enableStateButtons();
 	}
 
 	@Override
@@ -152,6 +177,9 @@ public class Java2dGui implements PointerListener, UIProvider {
 		hand.setEnabled(false);
 		go.setEnabled(false);
 		broomMovable = false;
+
+		undo.setEnabled(false);
+		redo.setEnabled(false);
 	}
 
 	@Override

@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 
 import net.sf.openrock.model.Match;
 import net.sf.openrock.ui.UIProvider;
+import net.sf.openrock.model.StateControllerIF;
+
 
 public class MatchController {
 	
@@ -31,6 +33,7 @@ public class MatchController {
 	private final UIProvider ui;
 	private Match match;
 	private boolean waitForNext;
+	private StateControllerIF state;
 	
 	MatchController(Game game, UIProvider ui) {
         this.game = game;
@@ -38,12 +41,27 @@ public class MatchController {
 		match = new Match("Team 1", "Team 2", 10);
         ui.setMatch(match);
 	}
+
+	public void setStateController(StateControllerIF state)
+	{
+		this.state = state;
+	}
 	
 	void newMatch(Match m) {
 		logger.info("Staring a new match");
 		match = m;
         ui.setMatch(match);
 		game.startTurn();
+	}
+
+	public Object getMatchState()
+	{
+		return match.getState();
+	}
+
+	public void restoreMatchState(Object st)
+	{
+		match.restoreState(st);
 	}
 
 	public int getCurrentTeam() {

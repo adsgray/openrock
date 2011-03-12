@@ -25,12 +25,12 @@ import java.util.List;
 
 
 public class ScoreFactory {
-	public static ScoreIF CreateNormalScore(List<Stone> stones) {
-		return new NormalScore(stones);
+	public static ScoreIF CreateNormalScore(World world) {
+		return new NormalScore(world);
 	}
 
-	public static ScoreIF CreateSkinsScore(List<Stone> stones) {
-		return new SkinsScore(stones);
+	public static ScoreIF CreateSkinsScore(World world) {
+		return new SkinsScore(world);
 	}
 
 	public static final Vect2d CENTER = 
@@ -58,12 +58,15 @@ public class ScoreFactory {
 
 class NormalScore implements ScoreIF {
 
-	protected List<Stone> stones;
 
-	public NormalScore(List<Stone> stones) { this.stones = stones; }
+	protected World world;
+
+	public NormalScore(World world) { this.world = world; }
 
 
 	public int getBestTeam() {
+		List<Stone> stones = world.getStones();
+
 		if (stones.isEmpty()) {
 			return -1;
 		}
@@ -79,6 +82,8 @@ class NormalScore implements ScoreIF {
 	}
 
 	public int getPoints() {
+		List<Stone> stones = world.getStones();
+
 		if (stones.isEmpty()) {
 			return 0;
 		}
@@ -107,13 +112,15 @@ class SkinsScore extends NormalScore {
 
 	private int score = 1;
 
-	public SkinsScore(List<Stone> stones)
+	public SkinsScore(World world)
 	{
-		super(stones);
+		super(world);
 	}
 
+	// add info logging calls here
 	@Override
 	public int getPoints() {
+		List<Stone> stones = world.getStones();
 		int points = super.getPoints();
 		// second stone thrown (zero based)
 		int hammerteam = stones.get(1).getTeam();

@@ -29,6 +29,7 @@ import net.sf.openrock.model.World;
 import net.sf.openrock.ui.UIProvider;
 import net.sf.openrock.game.Physics;
 import net.sf.openrock.game.PlayersFactory;
+import net.sf.openrock.model.StateControllerIF;
 
 
 public class WorldController {
@@ -39,6 +40,7 @@ public class WorldController {
 	private final UIProvider ui;
 	private final World world;
 	private final PlayersIF players;
+	private StateControllerIF state;
 	
 	private Stone currentStone;
 	private boolean live = false;
@@ -57,7 +59,22 @@ public class WorldController {
 		//players = PlayersFactory.CreatePerfectPlayers(world);
 		players = PlayersFactory.CreateImperfectPlayers(world, 0.025, 0.45);
 	}
-	
+
+	public void setStateController(StateControllerIF state)
+	{
+		this.state = state;
+	}
+
+	public Object getWorldState()
+	{
+		return world.getState();
+	}
+
+	public void restoreWorldState(Object st)
+	{
+		world.restoreState(st);
+	}
+
 	void prepareForNewEnd() {
 		world.clearStones();
 	}
@@ -106,7 +123,12 @@ public class WorldController {
 
 	public void throwStone() {
 		// do speed and dir calculations externally
+		// based on who is throwing (how many stones left)
 		PhysicsIF physics = players.getPhysics(game.getMatchCtrl().getStones());
+
+		state.destroyRedoState();
+		state.saveState();
+
 		double v = physics.getSpeed(ui.getSpeed());
 		Vect2d dir = physics.getDir();
 

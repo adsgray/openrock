@@ -24,6 +24,8 @@ import net.sf.openrock.model.Match;
 import net.sf.openrock.model.Stone;
 import net.sf.openrock.net.NetworkHandler;
 import net.sf.openrock.ui.UIProvider;
+import net.sf.openrock.model.StateControllerIF;
+import net.sf.openrock.model.StateController;
 
 
 public class Game {
@@ -36,6 +38,8 @@ public class Game {
 	private boolean[] localTeam = new boolean[2];
 	private String localTeamName;
 	private int localEnds;
+
+	private StateControllerIF stateCtrl;
 	
 	public Game(UIProvider ui) {
 		this.ui = ui;
@@ -50,15 +54,38 @@ public class Game {
 	public WorldController getWorldCtrl() {
 		return worldCtrl;
 	}
+
+	private void setupRealStateController()
+	{
+
+		stateCtrl = StateController.createRealStateController(matchCtrl, worldCtrl, ui);
+
+		ui.setStateController(stateCtrl);
+		matchCtrl.setStateController(stateCtrl);
+		worldCtrl.setStateController(stateCtrl);
+	}
+
+	private void setupNullStateController()
+	{
+		stateCtrl = StateController.createNullStateController();
+		ui.setStateController(stateCtrl);
+		matchCtrl.setStateController(stateCtrl);
+		worldCtrl.setStateController(stateCtrl);
+	}
 	
 	public void newHotSeatMatch(String team1, String team2, int ends) {
 		localTeam[0] = true;
 		localTeam[1] = true;
+
+		setupRealStateController();
 		matchCtrl.newMatch(new Match(team1, team2, ends));
 	}
 
 	public void newNetServerMatch(String team1, int ends, int port) {
+		setupNullStateController();
+
 		ui.setMatch(new Match(team1, "?", ends));
+
 		localTeamName = team1;
 		localEnds = ends;
 		localTeam[0] = true;
@@ -69,7 +96,11 @@ public class Game {
 	}
 
 	public void newNetClientMatch(String team2, int ends, String host, int port) {
+		setupNullStateController();
+
 		ui.setMatch(new Match("?", team2, 10));
+
+
 		localTeamName = team2;
 		localTeam[0] = false;
 		localTeam[1] = true;

@@ -24,7 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public class World {
+public class World implements StateIF {
 
 	private List<Stone> stones = new ArrayList<Stone>();
 	private List<Stone> added = new ArrayList<Stone>();
@@ -33,12 +33,11 @@ public class World {
 	private volatile boolean clear;
 
 	//private ScoreIF score = ScoreFactory.CreateNormalScore(stones);
-	private ScoreIF score = ScoreFactory.CreateSkinsScore(stones);
+	private ScoreIF score = ScoreFactory.CreateSkinsScore(this);
 	
 	public World() {
 	}
 	
-
 	public boolean step(double dt) {
 		int steps = 10;
 		if (clear) {
@@ -226,4 +225,38 @@ public class World {
 		return score.getPoints();
 	}
 
+	public Object getState()
+	{
+		return new WorldState(stones);
+	}
+
+	public void restoreState(Object state)
+	{
+		WorldState ws;
+
+		if (WorldState.class.isInstance(state)) {
+			ws = WorldState.class.cast(state);
+			stones = ws.getStones();
+		}
+
+		// else throw exception ?
+	}
+
+}
+
+
+class WorldState {
+	private List<Stone> stones;
+
+	WorldState(List<Stone> instones)
+	{
+		stones = new ArrayList<Stone>();
+
+		for (Stone s : instones) {
+			stones.add(s.clone());
+		}
+
+	}
+
+	public List<Stone> getStones() { return stones; }
 }

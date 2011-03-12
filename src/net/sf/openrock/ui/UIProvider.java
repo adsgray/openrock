@@ -21,6 +21,7 @@ package net.sf.openrock.ui;
 import net.sf.openrock.game.Game;
 import net.sf.openrock.model.Match;
 import net.sf.openrock.model.World;
+import net.sf.openrock.model.StateControllerIF;
 
 
 public interface UIProvider {
@@ -30,6 +31,10 @@ public interface UIProvider {
 	void setMatch(Match match);
 
 	void setWorld(World world);
+
+	void setStateController(StateControllerIF state);
+
+	void enableStateButtons();
 
 	void renderFrame();
 
