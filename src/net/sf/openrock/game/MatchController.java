@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import net.sf.openrock.model.Match;
 import net.sf.openrock.ui.UIProvider;
+import net.sf.openrock.model.StateIF;
 import net.sf.openrock.model.StateControllerIF;
 
 
@@ -54,14 +55,9 @@ public class MatchController {
 		game.startTurn();
 	}
 
-	public Object getMatchState()
+	public StateIF getMatchState()
 	{
 		return match.getState();
-	}
-
-	public void restoreMatchState(Object st)
-	{
-		match.restoreState(st);
 	}
 
 	public int getCurrentTeam() {

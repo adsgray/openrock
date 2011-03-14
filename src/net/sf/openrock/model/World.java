@@ -24,7 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public class World implements StateIF {
+public class World {
 
 	private List<Stone> stones = new ArrayList<Stone>();
 	private List<Stone> added = new ArrayList<Stone>();
@@ -225,38 +225,31 @@ public class World implements StateIF {
 		return score.getPoints();
 	}
 
-	public Object getState()
+	public StateIF getState()
 	{
-		return new WorldState(stones);
+		return new World.State();
 	}
 
-	public void restoreState(Object state)
-	{
-		WorldState ws;
+	class State implements StateIF {
+		private List<Stone> stones;
 
-		if (WorldState.class.isInstance(state)) {
-			ws = WorldState.class.cast(state);
-			stones = ws.getStones();
+		State()
+		{
+			stones = new ArrayList<Stone>();
+			World w = World.this;
+
+			for (Stone s : w.stones) {
+				stones.add(s.clone());
+			}
+
 		}
 
-		// else throw exception ?
-	}
-
-}
-
-
-class WorldState {
-	private List<Stone> stones;
-
-	WorldState(List<Stone> instones)
-	{
-		stones = new ArrayList<Stone>();
-
-		for (Stone s : instones) {
-			stones.add(s.clone());
+		@Override
+		public void restoreState()
+		{
+			World w = World.this;
+			w.stones = stones;
 		}
 
 	}
-
-	public List<Stone> getStones() { return stones; }
 }

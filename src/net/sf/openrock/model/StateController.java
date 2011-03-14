@@ -42,8 +42,8 @@ class NullStateController implements StateControllerIF
 
 class StateBlob
 {
-	public Object worldstate;
-	public Object matchstate;
+	public StateIF worldstate;
+	public StateIF matchstate;
 }
 
 class RealStateController implements StateControllerIF
@@ -55,8 +55,8 @@ class RealStateController implements StateControllerIF
 
 
 	// how to limit size?
-	private Stack <Object> undostack = new Stack <Object>();
-	private Stack <Object> redostack = new Stack <Object>();
+	private Stack <StateBlob> undostack = new Stack <StateBlob>();
+	private Stack <StateBlob> redostack = new Stack <StateBlob>();
 
 	RealStateController(MatchController mctl,
 			    WorldController wctl,
@@ -80,8 +80,8 @@ class RealStateController implements StateControllerIF
 
 	private void restoreState(StateBlob state)
 	{
-		wctl.restoreWorldState(state.worldstate);
-		mctl.restoreMatchState(state.matchstate);
+		state.worldstate.restoreState();
+		state.matchstate.restoreState();
 		logger.info("restoreState()");
 	}
 
@@ -124,7 +124,7 @@ class RealStateController implements StateControllerIF
 
 		logger.info("Undo()");
 		redostack.push(currentState());
-		restoreState((StateBlob)undostack.pop());
+		restoreState(undostack.pop());
 		ui.enableStateButtons();
 	}
 
@@ -140,7 +140,7 @@ class RealStateController implements StateControllerIF
 
 		logger.info("Redo()");
 		undostack.push(currentState());
-		restoreState((StateBlob)redostack.pop());
+		restoreState(redostack.pop());
 		ui.enableStateButtons();
 	}
 }

@@ -29,6 +29,7 @@ import net.sf.openrock.model.World;
 import net.sf.openrock.ui.UIProvider;
 import net.sf.openrock.game.Physics;
 import net.sf.openrock.game.PlayersFactory;
+import net.sf.openrock.model.StateIF;
 import net.sf.openrock.model.StateControllerIF;
 
 
@@ -65,14 +66,9 @@ public class WorldController {
 		this.state = state;
 	}
 
-	public Object getWorldState()
+	public StateIF getWorldState()
 	{
 		return world.getState();
-	}
-
-	public void restoreWorldState(Object st)
-	{
-		world.restoreState(st);
 	}
 
 	void prepareForNewEnd() {

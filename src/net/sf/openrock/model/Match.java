@@ -19,7 +19,7 @@
 package net.sf.openrock.model;
 
 
-public class Match implements StateIF {
+public class Match {
 
 	private static final int STONE_COUNT = 8;
 
@@ -123,63 +123,52 @@ public class Match implements StateIF {
 		}
 	}
 
-
-	public Object getState()
+	public StateIF getState()
 	{
-		return new MatchState(stones, score, turn, end);
+		return new Match.State();
 	}
 
-	public void restoreState(Object state)
-	{
-		MatchState ms;
+	class State implements StateIF {
+		private int[] stones;
+		private int[][] score;
+		private int turn;
+		private int end;
 
-		if (MatchState.class.isInstance(state)) {
-			ms = MatchState.class.cast(state);
-			stones = ms.getStones();
-			score  = ms.getScore();
-			turn   = ms.getTurn();
-			end    = ms.getEnd();
-		}
-
-		// else throw exception ?
-	}
-	
-}
-
-
-class MatchState {
-	private int[] stones;
-	private int[][] score;
-	private int turn;
-	private int end;
-
-	private void multiArrayCopy(int[][] source,int[][] destination)
-	{
-		for (int a=0;a<source.length;a++)
+		private void multiArrayCopy(int[][] source,int[][] destination)
 		{
-			destination[a] = new int[source[a].length];
-			System.arraycopy(source[a], 0,
-					 destination[a], 0,
-					 source[a].length);
+			for (int a=0;a<source.length;a++)
+			{
+				destination[a] = new int[source[a].length];
+				System.arraycopy(source[a], 0,
+					 	destination[a], 0,
+					 	source[a].length);
+			}
+		}
+
+		State()
+		{
+			Match m = Match.this;
+
+			stones = new int[m.stones.length];
+			System.arraycopy(m.stones, 0,
+			                 stones, 0,
+					 m.stones.length);
+
+			score = new int[m.score.length][];
+			multiArrayCopy(m.score, score);
+
+			turn = m.turn;
+			end  = m.end;
+		}
+
+		public void restoreState()
+		{
+			Match m = Match.this;
+
+			m.stones = stones;
+			m.score  = score;
+			m.turn   = turn;
+			m.end    = end;
 		}
 	}
-
-	MatchState(int stones[],
-		   int score[][],
-		   int turn,
-		   int end)
-	{
-		this.stones = new int[stones.length];
-		System.arraycopy(stones, 0, this.stones, 0, stones.length);
-		this.score = new int[score.length][];
-		multiArrayCopy(score, this.score);
-
-		this.turn = turn;
-		this.end = end;
-	}
-
-	public int[] getStones() { return stones; }
-	public int[][] getScore() { return score; }
-	public int getTurn() { return turn; }
-	public int getEnd() { return end; }
 }
