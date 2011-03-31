@@ -40,11 +40,29 @@ public class Game {
 	private int localEnds;
 
 	private StateControllerIF stateCtrl;
+	private GameConfig config;
 	
 	public Game(UIProvider ui) {
 		this.ui = ui;
 		matchCtrl = new MatchController(this, ui);
 		worldCtrl = new WorldController(this, ui);
+	}
+
+	public void createConfig(ConfigImporter imp)
+	{
+		config = GameConfigFactory.instance();
+
+		config.createPlayers(worldCtrl.getWorld(),
+				     imp.playersType(),
+				     imp.maxSpeedError(),
+				     imp.maxDirError());
+
+		config.createScoring(worldCtrl.getWorld(),
+				     imp.scoringType());
+
+		config.createCurl(imp.curlType());
+
+		worldCtrl.setGameConfig(config);
 	}
 
 	public MatchController getMatchCtrl() {
@@ -61,7 +79,6 @@ public class Game {
 		stateCtrl = StateController.createRealStateController(matchCtrl, worldCtrl, ui);
 
 		ui.setStateController(stateCtrl);
-		matchCtrl.setStateController(stateCtrl);
 		worldCtrl.setStateController(stateCtrl);
 	}
 
@@ -69,7 +86,6 @@ public class Game {
 	{
 		stateCtrl = StateController.createNullStateController();
 		ui.setStateController(stateCtrl);
-		matchCtrl.setStateController(stateCtrl);
 		worldCtrl.setStateController(stateCtrl);
 	}
 	

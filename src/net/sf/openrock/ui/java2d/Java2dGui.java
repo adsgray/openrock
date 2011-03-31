@@ -44,7 +44,7 @@ public class Java2dGui implements PointerListener, UIProvider {
 	private final SpeedWidget speed;
 	private final HandWidget hand;
 	private final GoWidget go;
-	private final SwingGui swingGui;
+	private final SwingGui2 swingGui;
 
 	private final UndoWidget undo;
 	private final RedoWidget redo;
@@ -68,7 +68,7 @@ public class Java2dGui implements PointerListener, UIProvider {
 				System.exit(0);
 			}
 		});
-		swingGui = new SwingGui(frame);
+		swingGui = new SwingGui2();
 		renderer = new Renderer(gc, new Dimension(800, 600));
 		view = new ViewWidget();
 		view.addPointerListener(this);

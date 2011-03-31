@@ -1,6 +1,8 @@
 
 package net.sf.openrock.game;
 
+import java.util.logging.Logger;
+
 import net.sf.openrock.model.World;
 import net.sf.openrock.game.PhysicsIF;
 import net.sf.openrock.game.Physics;
@@ -8,23 +10,44 @@ import net.sf.openrock.model.Vect2d;
 
 public class PlayersFactory
 {
-	static PlayersIF CreatePerfectPlayers(World world)
-	{
-		return new PerfectPlayers(world);
+	static final Logger logger = Logger.getLogger(PlayersFactory.class.getName());
+
+	public enum PlayersType {
+		PERFECT,
+		IMPERFECT,
+		PERFECTSKIPS
 	}
 
-	static PlayersIF CreateImperfectPlayers(World world, double maxspd,
-				double maxdir)
+	static PlayersIF CreatePlayersByType(World world,
+					PlayersType playerstype,
+					int maxspeederror,
+					int maxdirerror)
 	{
-		return new ImperfectPlayers(world, maxspd, maxdir);
-	}
+		PlayersIF players = null;
 
-	static PlayersIF CreatePerfectSkips(World world, double maxspd,
-				double maxdir)
-	{
-		return new PerfectSkips(world, maxspd, maxdir);
+		switch(playerstype)
+		{
+			case PERFECT:
+			players = new PerfectPlayers(world);
+			break;
+
+			case IMPERFECT:
+			players = new ImperfectPlayers(world,
+					(double)maxspeederror/100,
+					(double)maxdirerror/100);
+			break;
+
+			case PERFECTSKIPS:
+			players = new PerfectSkips(world,
+					(double)maxspeederror/100,
+					(double)maxdirerror/100);
+			break;
+		}
+
+		return players;
 	}
 }
+
 
 class PerfectPlayers implements PlayersIF
 {
@@ -33,6 +56,7 @@ class PerfectPlayers implements PlayersIF
 	PerfectPlayers(World world)
 	{
 		physics = Physics.CreateDefaultPhysics(world);
+		PlayersFactory.logger.info("perfectplayers");
 	}
 
 	public PhysicsIF getPhysics(int stones)
@@ -45,11 +69,14 @@ class ImperfectPlayers implements PlayersIF
 {
 	protected PhysicsIF[] players = new PhysicsIF[4];
 
-	ImperfectPlayers() {}
+	ImperfectPlayers() {
+	}
 
 	ImperfectPlayers(World world, double maxspeederror, double maxdirerror)
 	{
 		// make later players more skilled
+
+		PlayersFactory.logger.info("imperfect players");
 
 		PhysicsIF dflt = Physics.CreateDefaultPhysics(world);
 
@@ -73,6 +100,8 @@ class PerfectSkips extends ImperfectPlayers
 
 	PerfectSkips(World world, double maxspeederror, double maxdirerror)
 	{
+		PlayersFactory.logger.info("perfect skips");
+
 		PhysicsIF dflt = Physics.CreateDefaultPhysics(world);
 
 		for (int i = 0; i < 3; i++)

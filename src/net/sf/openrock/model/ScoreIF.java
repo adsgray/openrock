@@ -18,11 +18,6 @@
  */
 package net.sf.openrock.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 
 public interface ScoreIF {
 	public int getBestTeam();

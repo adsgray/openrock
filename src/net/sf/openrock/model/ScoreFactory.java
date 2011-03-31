@@ -18,6 +18,8 @@
  */
 package net.sf.openrock.model;
 
+import java.util.logging.Logger;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,6 +27,9 @@ import java.util.List;
 
 
 public class ScoreFactory {
+
+	public static final Logger logger = Logger.getLogger(ScoreFactory.class.getName());
+
 	public static ScoreIF CreateNormalScore(World world) {
 		return new NormalScore(world);
 	}
@@ -61,9 +66,13 @@ class NormalScore implements ScoreIF {
 
 	protected World world;
 
-	public NormalScore(World world) { this.world = world; }
+	public NormalScore(World world) { 
+		ScoreFactory.logger.info("NormalScore");
+		this.world = world; 
+	}
 
 
+	// this method should be in World
 	public int getBestTeam() {
 		List<Stone> stones = world.getStones();
 
@@ -82,6 +91,9 @@ class NormalScore implements ScoreIF {
 	}
 
 	public int getPoints() {
+		// instead of getting stones from world, should
+		// be passed a sorted array, which has only
+		// the team numbers
 		List<Stone> stones = world.getStones();
 
 		if (stones.isEmpty()) {
@@ -112,9 +124,17 @@ class SkinsScore extends NormalScore {
 
 	private int score = 1;
 
+	/*
+		Could have each end worth a different number of
+		skins. Store in Match object?
+		Initially, set score to Match.skins[0] (end 1)
+		If carryover, add Match.skins[i] to this.score.
+		If skin won, set this.score to Match.skins[i+1]
+	 */
 	public SkinsScore(World world)
 	{
 		super(world);
+		ScoreFactory.logger.info("SkinsScore");
 	}
 
 	// add info logging calls here

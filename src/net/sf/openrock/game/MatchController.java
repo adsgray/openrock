@@ -34,18 +34,12 @@ public class MatchController {
 	private final UIProvider ui;
 	private Match match;
 	private boolean waitForNext;
-	private StateControllerIF state;
 	
 	MatchController(Game game, UIProvider ui) {
         this.game = game;
 		this.ui = ui;
 		match = new Match("Team 1", "Team 2", 10);
         ui.setMatch(match);
-	}
-
-	public void setStateController(StateControllerIF state)
-	{
-		this.state = state;
 	}
 	
 	void newMatch(Match m) {

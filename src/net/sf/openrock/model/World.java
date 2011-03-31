@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import net.sf.openrock.game.GameConfig;
+
 
 public class World {
 
@@ -32,10 +34,13 @@ public class World {
 	private double broomY;
 	private volatile boolean clear;
 
-	//private ScoreIF score = ScoreFactory.CreateNormalScore(stones);
-	private ScoreIF score = ScoreFactory.CreateSkinsScore(this);
+	private GameConfig config;
 	
 	public World() {
+	}
+
+	public void setGameConfig(GameConfig config) {
+		this.config = config;
 	}
 	
 	public boolean step(double dt) {
@@ -218,10 +223,12 @@ public class World {
 	}
 
 	public int getBestTeam() {
+		ScoreIF score = config.getScore();
 		return score.getBestTeam();
 	}
 
 	public int getPoints() {
+		ScoreIF score = config.getScore();
 		return score.getPoints();
 	}
 

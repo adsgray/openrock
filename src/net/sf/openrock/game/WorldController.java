@@ -31,6 +31,8 @@ import net.sf.openrock.game.Physics;
 import net.sf.openrock.game.PlayersFactory;
 import net.sf.openrock.model.StateIF;
 import net.sf.openrock.model.StateControllerIF;
+import net.sf.openrock.model.CurlIF;
+import net.sf.openrock.model.CurlFactory;
 
 
 public class WorldController {
@@ -40,8 +42,8 @@ public class WorldController {
 	private final Game game;
 	private final UIProvider ui;
 	private final World world;
-	private final PlayersIF players;
 	private StateControllerIF state;
+	private GameConfig config;
 	
 	private Stone currentStone;
 	private boolean live = false;
@@ -54,11 +56,16 @@ public class WorldController {
 		world = new World();
 		world.setBroomLocation(0, CurlingConstants.TEE_TO_CENTER);
 		ui.setWorld(world);
+	}
 
-		//physics = Physics.CreateDefaultPhysics(world);
-		//physics = Physics.CreateErrorPhysics(world, 0.015, 0.45);
-		//players = PlayersFactory.CreatePerfectPlayers(world);
-		players = PlayersFactory.CreateImperfectPlayers(world, 0.025, 0.45);
+	public void setGameConfig(GameConfig config) {
+		this.config = config;
+		world.setGameConfig(config);
+	}
+
+	public World getWorld()
+	{
+		return world;
 	}
 
 	public void setStateController(StateControllerIF state)
@@ -120,6 +127,7 @@ public class WorldController {
 	public void throwStone() {
 		// do speed and dir calculations externally
 		// based on who is throwing (how many stones left)
+		PlayersIF players = config.getPlayers();
 		PhysicsIF physics = players.getPhysics(game.getMatchCtrl().getStones());
 
 		state.destroyRedoState();
@@ -135,6 +143,7 @@ public class WorldController {
 			da = -da;
 		}
 		currentStone = new Stone(CurlingConstants.STONE_START, vel, 0, da, game.getMatchCtrl().getCurrentTeam());
+		currentStone.setCurl(config.getCurl());
 		double sweep = ui.getSelectedSweep();
 		currentStone.setSweep(sweep);
 		logger.info("New stone: " + currentStone);

@@ -30,8 +30,10 @@ public class Stone implements Cloneable {
 	private boolean hit;
 	private boolean freeGuard;
 	private boolean shotstone = false;
+	private CurlIF curl;
 
-	public Stone(Vect2d pos, Vect2d vel, double a, double da, int team) {
+	public Stone(Vect2d pos, Vect2d vel, double a, double da, 
+			int team) {
 		position = pos;
 		velocity = vel;
 		this.a = a;
@@ -39,20 +41,22 @@ public class Stone implements Cloneable {
 		this.team = team;
 	}
 
+	public void setCurl(CurlIF curl)
+	{
+		this.curl = curl;
+	}
+
 	private double getCurl(double s)
 	{
-		double curl = 0;
+		double curlamt = 0;
 
 		// no curl until release point
 		if (position.getY() > CurlingConstants.RELEASE_POINT)
 		{
-			double curlFriction = (1.0 - sweep) * 0.02 + 
-				sweep * 0.01;
-			curl = -curlFriction * 
-				Math.max(-1.0, Math.min(0.7*da/(s*s), 1.0));
+			curlamt = curl.getCurl(da, s, sweep);
 		}
 
-		return curl;
+		return curlamt;
 	}
 
 	public void step(double dt) {
